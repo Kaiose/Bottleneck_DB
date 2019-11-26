@@ -1,0 +1,14 @@
+create table user_accounts(
+number INT PRIMARY KEY,
+id CHAR(30),
+password CHAR(30)
+);
+
+
+create table characters(
+character_name CHAR(30) PRIMARY KEY,
+number INT,
+class_type CHAR(30),
+level int,
+foreign key(number) references user_accounts(number)
+);
