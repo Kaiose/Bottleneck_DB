@@ -1,9 +1,9 @@
 #pragma once
 #include "stdafx.h"
-#include <sql.h>
 #include <sqlext.h>
 
 #define PARAMETER_LEN 30
+
 
 class Attribute{
 public:
@@ -53,17 +53,17 @@ class Database {
 	SQLLEN idLen, nameLen, passwordLen;
 	SQLHENV hEnv;
 	SQLHDBC hDbc;
-	SQLHSTMT hStmt;
-
+	
 	SQLWCHAR ODBC_NAME[PARAMETER_LEN];
 	SQLWCHAR ODBC_ID[PARAMETER_LEN];
 	SQLWCHAR ODBC_PW[PARAMETER_LEN];
 	
 	int attribute_count;
 
-	unordered_map<int, Attribute*> attri_map;
-
+	
 public:
+	SQLHSTMT hStmt;
+	unordered_map<int, Attribute*> attri_map;
 
 	Database(SQLWCHAR* odbc_name, SQLWCHAR* odbc_id, SQLWCHAR* odbc_pw);
 
@@ -71,12 +71,18 @@ public:
 	bool Connect();
 	bool Disconnect();
 	
-	void Query();
 	
 	void AttributeBind();
 	void Bind_Attribute(const char* attribute_name, int type);
 
+	static void Insert(SQLHSTMT hStmt);
+	void Delete();
+	void Select();
+
+	static bool Query(SQLHSTMT hStmt,wchar_t* command);
+	bool Query();
 
 private:
-
+	
+	
 };

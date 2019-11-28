@@ -55,20 +55,40 @@ bool Database::Disconnect() {
 }
 
 
-void Database::Query() {
+bool Database::Query() {
 
 	wchar_t command[100] = { 0, };
 
 	wcin.getline(command, 100);
 	int ret = SQLExecDirect(hStmt, (SQLWCHAR*)command, SQL_NTS);
+	
+	
 	if (ret != SQL_SUCCESS) {
 		cout << "Query Failed \n";
 		if (hStmt) SQLCloseCursor(hStmt);
-		return;
+		return false;
 	}
+	return true;
 
-	wstring buf(command);
+}
+
+bool Database::Query(SQLHSTMT hStmt,wchar_t* command) {
+
+
+	int ret = SQLExecDirect(hStmt, (SQLWCHAR*)command, SQL_NTS);
+
+	if (ret != SQL_SUCCESS) {
+		cout << "Query Failed \n";
+		if (hStmt) SQLCloseCursor(hStmt);
+		return false;
+	}
+	return true;
+
+}
+
+void Database::Select() {
 	
+	if (Query() == false) cout << "Select Query Failed\n"; return;
 	while (SQLFetch(hStmt) != SQL_NO_DATA) {
 		unordered_map<int, Attribute*>::iterator it = attri_map.begin();
 		for (; it != attri_map.end(); it++)
@@ -77,10 +97,33 @@ void Database::Query() {
 	}
 	if (hStmt) SQLCloseCursor(hStmt);
 
-	return;
-
 }
 
+
+void Database::Insert(SQLHSTMT hStmt) {
+	LARGE_INTEGER cicles; 
+	QueryPerformanceCounter(&cicles); 
+	srand(cicles.QuadPart);
+	//	Source https ://www.physicsforums.com/threads/srand-seed-microsecs.303949/
+
+	int value = rand();
+	//"Insert into user_accounts values(id, "name", password)"
+	
+	wchar_t command[100] = { 0, };
+	wsprintfW(command, L"insert into user_accounts values(%d,\"%dtest\",1234);", value, value);
+
+	if (Query(hStmt,command) == false) cout << "Insert Query Failed\n"; return;
+	
+
+	if (hStmt) SQLCloseCursor(hStmt);
+}
+
+void Database::Delete() {
+	if (Query() == false) cout << "Delete Query Failed\n"; return;
+
+	if (hStmt) SQLCloseCursor(hStmt);
+
+}
 
 
 void Database::Bind_Attribute(const char* attribute_name, int type) {

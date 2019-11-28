@@ -16,6 +16,9 @@
     <Filter Include="Database">
       <UniqueIdentifier>{9097606f-7502-40e5-b92b-7f4bf7fbd7de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ThreadPool">
+      <UniqueIdentifier>{425508f8-c07d-462f-ab00-6fdc14fdddfe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -26,6 +29,9 @@
     </ClInclude>
     <ClInclude Include="Database.h">
       <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadManager.h">
+      <Filter>ThreadPool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
