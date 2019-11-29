@@ -34,6 +34,18 @@ class ThreadManager : public Singleton<ThreadManager> {
 
 	~ThreadManager() {
 		
+
+	}
+public:
+	typedef void func(SQLHSTMT hStmt);
+
+
+	void push(func work, SQLHSTMT hStmt) {
+		queue.emplace_back(new thread(work,hStmt));
+	}
+
+	
+	void wait() {
 		vector<thread*>::iterator it;
 
 		while (!queue.empty()) {
@@ -50,16 +62,6 @@ class ThreadManager : public Singleton<ThreadManager> {
 		}
 
 	}
-public:
-	typedef void func(SQLHSTMT hStmt);
-
-
-	void push(func work, SQLHSTMT hStmt) {
-		queue.emplace_back(new thread(work,hStmt));
-	}
-
-	
-	
 
 
 };

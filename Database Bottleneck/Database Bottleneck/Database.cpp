@@ -78,7 +78,6 @@ bool Database::Query(SQLHSTMT hStmt,wchar_t* command) {
 	int ret = SQLExecDirect(hStmt, (SQLWCHAR*)command, SQL_NTS);
 
 	if (ret != SQL_SUCCESS) {
-		cout << "Query Failed \n";
 		if (hStmt) SQLCloseCursor(hStmt);
 		return false;
 	}
@@ -112,9 +111,12 @@ void Database::Insert(SQLHSTMT hStmt) {
 	wchar_t command[100] = { 0, };
 	wsprintfW(command, L"insert into user_accounts values(%d,\"%dtest\",1234);", value, value);
 
-	if (Query(hStmt,command) == false) cout << "Insert Query Failed\n"; return;
+	if (Query(hStmt, command) == false) {
+		if (hStmt) SQLCloseCursor(hStmt);
+		Insert(hStmt);
+		return;
+	}// cout << "Insert Query Failed\n"; return;
 	
-
 	if (hStmt) SQLCloseCursor(hStmt);
 }
 
